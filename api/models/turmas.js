@@ -4,7 +4,11 @@ module.exports = (sequelize, DataTypes) => {
     data_inicio: DataTypes.DATEONLY
   }, {});
   Turmas.associate = function(models) {
-    // associations can be defined here
+    Turmas.hasMany(models.Matriculas, {
+      foreignKey: 'turma_id'
+    })
+    Turmas.belongsTo(models.Pessoas)
+    Turmas.belongsTo(models.Niveis);
   };
   return Turmas;
 };
