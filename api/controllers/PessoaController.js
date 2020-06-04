@@ -46,7 +46,6 @@ class PessoaController {
     }
   }
 
-  //deletar um registro
   static async apagaPessoa(req, res) {
     const { id } = req.params
     try {
@@ -58,8 +57,6 @@ class PessoaController {
     }
   }
 
-  //http://localhost:3000/pessoas/1/matricula/5
-  //http://localhost:3000/pessoas/:estudanteId/matricula/:matriculaId
   static async pegaUmaMatricula(req, res) {
     const { estudanteId, matriculaId } = req.params
     try {
@@ -86,6 +83,32 @@ class PessoaController {
     }
   }
 
+  static async atualizaMatricula(req, res) {
+    const { estudanteId, matriculaId } = req.params
+    const novasInfos = req.body
+    try {
+      await database.Matriculas.update(novasInfos, { 
+        where: { 
+          id: Number(matriculaId),
+          estudante_id: Number(estudanteId) 
+        }})
+      const MatriculaAtualizada = await database.Matriculas.findOne( { where: { id: Number(matriculaId) }})
+      return res.status(200).json(MatriculaAtualizada)
+    } catch (error) {
+      return res.status(500).json(error.message)
+    }
+  }
+
+  static async apagaMatricula(req, res) {
+    const { estudanteId, matriculaId } = req.params
+    try {
+      await database.Matriculas.destroy({ where: { id: Number(matriculaId) }})
+      return res.status(200).json({ mensagem: `id ${matriculaId} deletado` })
+
+    } catch (error) {
+      return res.status(500).json(error.message)
+    }
+  }
 }
 
 module.exports = PessoaController
